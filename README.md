@@ -32,7 +32,7 @@ Until now, I test it on my pc
 + version: py3.6, py2.7
 + do : fork this git to your local dir
 + run this: python3 setup.py install
- 
+
 Well done, do report me if any bad things happended
 
 ## Explaination
