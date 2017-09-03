@@ -27,11 +27,12 @@ Besides, both input and output of this function should be decoded as unicode.
 
 Thanks Matrix67's [article](http://www.matrix67.com/blog/archives/5044)
 
-Install:
+## Install:
 Until now, I test it on my pc 
 + version: py3.6, py2.7
 + do : fork this git to your local dir
 + run this: python3 setup.py install
+< \br>
 Well done, do report me if any bad things happended
 
 ## Explaination
