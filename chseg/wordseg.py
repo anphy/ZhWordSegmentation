@@ -7,24 +7,26 @@ Reference: http://www.matrix67.com/blog/archives/5044
 """
 
 import re
-
+import time
 from .probability import entropyOfList
 from .sequence import genSubparts, genSubstr
 
 
 
 
-def indexOfSortedSuffix(doc, max_word_len):
+def indexOfSortedSuffix(m_data, max_word_len):
     """
     Treat a suffix as an index where the suffix begins.
     Then sort these indexes by the suffixes.
     """
-    indexes = []
-    length = len(doc)
-    for i in range(0, length):
-        for j in range(i + 1, min(i + 1 + max_word_len, length + 1)):
-            indexes.append((i, j))
-    return sorted(indexes, key=lambda i: doc[i[0]:i[1]])
+    indexs = {}
+    for i in range(len(m_data)):
+        sl = len(m_data[i]) + 1
+        indexs[i] = []
+        for j in range(sl):
+            for k in range(j+1, min(sl,max_word_len+j+1)):
+                indexs[i].append((j,k))
+    return indexs
 
 
 class WordInfo(object):
@@ -89,6 +91,7 @@ class WordSegment(object):
 
     def __init__(self, doc, max_word_len=5, min_freq=0.00005, min_entropy=2.0, min_aggregation=50):
         super(WordSegment, self).__init__()
+        t = time.time()
         self.max_word_len = max_word_len
         self.min_freq = min_freq
         self.min_entropy = min_entropy
@@ -106,24 +109,30 @@ class WordSegment(object):
                     v.freq > self.min_freq and v.left > self.min_entropy and v.right > self.min_entropy
         self.word_with_freq = map(lambda w: (w.text, w.freq), filter(filter_func, self.word_infos))
         self.words = list(map(lambda w: w[0], self.word_with_freq))
+        print('total_time:%s seconds'%round(time.time() - t, 3))
+        
+    def wash_data(self, raw_data):
+        pattern = re.compile(u'[\\s\\d,.<>/?:;\'\"[\\]{}()\\|~!@#$%^&*\\-_=+a-zA-Z，。《》、？：；“”‘’｛｝【】（）…￥！—┄－]+')
+        doc = re.sub(pattern, ' ', raw_data).split()
+        return doc
 
     def genWords(self, doc):
         """
         Generate all candidate words with their frequency/entropy/aggregation informations
         @param doc the document used for words generation
         """
-        pattern = re.compile(u'[\\s\\d,.<>/?:;\'\"[\\]{}()\\|~!@#$%^&*\\-_=+a-zA-Z，。《》、？：；“”‘’｛｝【】（）…￥！—┄－]+')
-        doc = re.sub(pattern, ' ', doc)
+        doc = self.wash_data(doc)
         suffix_indexes = indexOfSortedSuffix(doc, self.max_word_len)
         word_cands = {}
         # compute frequency and neighbors
-        for suf in suffix_indexes:
-            word = doc[suf[0]:suf[1]]
-            if word not in word_cands:
-                word_cands[word] = WordInfo(word)
-            word_cands[word].update(doc[suf[0] - 1:suf[0]], doc[suf[1]:suf[1] + 1])
+        for i, indexes in suffix_indexes.items():
+            for index in indexes:
+                word = doc[i][index[0]:index[1]]
+                if word not in word_cands:
+                    word_cands[word] = WordInfo(word)
+                word_cands[word].update(doc[i][index[0] - 1:index[0]], doc[i][index[1]:index[1] + 1])
         # compute probability and entropy
-        length = len(doc)
+        length = len(''.join(doc))
         for k in word_cands:
             word_cands[k].compute(length)
         # compute aggregation of words whose length > 1

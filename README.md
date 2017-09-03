@@ -37,3 +37,8 @@ Well done, do report me if any bad things happended
 
 ## Explaination
 When I need deal with some chinese texts, I found this module(?). So I did an  adjustment to fit my needs.Since the module is not maintained by it's author, I, though a newbee in NLP, want to make it a more useful tool for processing chinese texts.
+
+## plans:
+[x] add concurrent soupport
+[x] add read and save datasets, as you read more you get more words
+[x] add more algorithm
