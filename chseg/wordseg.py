@@ -105,7 +105,7 @@ class WordSegment(object):
         filter_func = lambda v: len(v.text) > 1 and v.aggregation > self.min_aggregation and\
                     v.freq > self.min_freq and v.left > self.min_entropy and v.right > self.min_entropy
         self.word_with_freq = map(lambda w: (w.text, w.freq), filter(filter_func, self.word_infos))
-        self.words = map(lambda w: w[0], self.word_with_freq)
+        self.words = list(map(lambda w: w[0], self.word_with_freq))
 
     def genWords(self, doc):
         """

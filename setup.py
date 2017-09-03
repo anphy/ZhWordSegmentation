@@ -2,10 +2,10 @@ from distutils.core import setup
 
 setup(
     name='chseg',
-    version='0.01',
+    version='0.012',
     description='chinese word segment',
     author='Kaiqiang Duan',
-    url='https://github.com/Moonshile/ChineseWordSegmentation',
+    url='https://github.com/anphy/ChineseWordSegmentation',
     license="MIT",
     classifiers=[
         'Intended Audience :: Developers',
@@ -20,7 +20,7 @@ setup(
         'Topic :: Text Processing',
         'Topic :: Text Processing :: Linguistic',
     ],
-    keywords='NLP,Chinese,Keywords extraction, Abstract extraction',
+    keywords='NLP,Chinese, word segment',
     packages=['chseg'],
     package_dir={'chseg':'chseg'},
 )

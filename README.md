@@ -27,5 +27,12 @@ Besides, both input and output of this function should be decoded as unicode.
 
 Thanks Matrix67's [article](http://www.matrix67.com/blog/archives/5044)
 
-## EXplaination
-I can't run the code correctly in py3, since I change it to fit that version. So I do have to read the code to know what's going on behind all this, which is an intresting things as well.
+Install:
+Until now, I test it on my pc 
++ version: py3.6, py2.7
++ do : fork this git to your local dir
++ run this: python3 setup.py install
+Well done, do report me if any bad things happended
+
+## Explaination
+When I need deal with some chinese texts, I found this module(?). So I did an  adjustment to fit my needs.Since the module is not maintained by it's author, I, though a newbee in NLP, want to make it a more useful tool of processing chinese texts.
