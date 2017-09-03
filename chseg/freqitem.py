@@ -4,11 +4,10 @@
 A simple frequent itemset mining algorithm implementation
 Author: 段凯强
 """
-
+from __future__ import print_function
 import itertools
-
-from sequence import dedup
-from hashtree import HashTree, sameNodes
+from .sequence import dedup
+from .hashtree import HashTree, sameNodes
 
 class FreqItem(object):
     def __init__(self, transactions, sup_theta=.1):
@@ -70,4 +69,4 @@ class FreqItem(object):
 if __name__ == '__main__':
     transactions = [[1,2,3],[1,2,4],[2,4,6,8],[1,3,5,7], [5,7,2]]
     freqItem = FreqItem(transactions, sup_theta=.3)
-    print freqItem.genFreqItemSets()
+    print(freqItem.genFreqItemSets())

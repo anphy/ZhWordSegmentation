@@ -97,8 +97,8 @@ if __name__ == '__main__':
     tree = HashTree(to_count)
     transactions = [[1,2,3],[1,2,4],[2,4,6,8],[1,3,5,7]]
     tree.count(transactions)
-    print 'Frequency with transactions', transactions
-    print tree.get(2)
-    print tree.get(1)
+    print('Frequency with transactions', transactions)
+    print(tree.get(2))
+    print(tree.get(1))
 
 

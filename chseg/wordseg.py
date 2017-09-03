@@ -8,8 +8,8 @@ Reference: http://www.matrix67.com/blog/archives/5044
 
 import re
 
-from probability import entropyOfList
-from sequence import genSubparts, genSubstr
+from .probability import entropyOfList
+from .sequence import genSubparts, genSubstr
 
 
 
@@ -21,10 +21,10 @@ def indexOfSortedSuffix(doc, max_word_len):
     """
     indexes = []
     length = len(doc)
-    for i in xrange(0, length):
-        for j in xrange(i + 1, min(i + 1 + max_word_len, length + 1)):
+    for i in range(0, length):
+        for j in range(i + 1, min(i + 1 + max_word_len, length + 1)):
             indexes.append((i, j))
-    return sorted(indexes, key=lambda (i, j): doc[i:j])
+    return sorted(indexes, key=lambda i: doc[i[0]:i[1]])
 
 
 class WordInfo(object):
@@ -66,7 +66,7 @@ class WordInfo(object):
         parts = genSubparts(self.text)
         if len(parts) > 0:
             self.aggregation = min(map(
-                lambda (p1, p2): self.freq/words_dict[p1].freq/words_dict[p2].freq,
+                lambda p: self.freq/words_dict[p[0]].freq/words_dict[p[1]].freq,
                 parts
             ))
 
@@ -143,7 +143,7 @@ class WordSegment(object):
         res = []
         while i < len(sentence):
             if method == self.L or method == self.S:
-                j_range = range(self.max_word_len, 0, -1) if method == self.L else range(2, self.max_word_len + 1) + [1]
+                j_range = range(self.max_word_len, 0, -1) if method == self.L else list(range(2, self.max_word_len + 1)) + [1]
                 for j in j_range:
                     if j == 1 or sentence[i:i + j] in self.words:
                         res.append(sentence[i:i + j])
@@ -163,13 +163,13 @@ class WordSegment(object):
 if __name__ == '__main__':
     doc = u'十四是十四四十是四十，，十四不是四十，，，，四十不是十四'
     ws = WordSegment(doc, max_word_len=2, min_aggregation=1.2, min_entropy=0.4)
-    print ' '.join(map(lambda w: '%s:%f'%w, ws.word_with_freq))
-    print ' '.join(ws.words)
-    print ' '.join(ws.segSentence(doc))
-    print 'average len: ', ws.avg_len
-    print 'average frequency: ', ws.avg_freq
-    print 'average left entropy: ', ws.avg_left_entropy
-    print 'average right entropy: ', ws.avg_right_entropy
-    print 'average aggregation: ', ws.avg_aggregation
+    print( ' '.join(map(lambda w: '%s:%f'%w, ws.word_with_freq)))
+    print(' '.join(ws.words))
+    print(' '.join(ws.segSentence(doc)))
+    print('average len: ', ws.avg_len)
+    print('average frequency: ', ws.avg_freq)
+    print('average left entropy: ', ws.avg_left_entropy)
+    print('average right entropy: ', ws.avg_right_entropy)
+    print('average aggregation: ', ws.avg_aggregation)
 
 
