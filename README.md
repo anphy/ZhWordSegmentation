@@ -26,3 +26,6 @@ Besides, both input and output of this function should be decoded as unicode.
 ## Reference
 
 Thanks Matrix67's [article](http://www.matrix67.com/blog/archives/5044)
+
+## EXplaination
+I can't run the code correctly in py3, since I change it to fit that version. So I do have to read the code to know what's going on behind all this, which is an intresting things as well.
