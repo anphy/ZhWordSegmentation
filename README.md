@@ -1,6 +1,14 @@
 # ChineseWordSegmentation
 Chinese word segmentation algorithm without corpus
 
+
+## Explaination
+When I need deal with some chinese texts, I found this module [ChineseWordSegmentation](https://github.com/Moonshile/ChineseWordSegmentation). 
+
+So I did an  adjustment to fit my needs. Since the it is not maintained by it's author, 
+
+I, though a newbee in NLP, want to make it a more useful tool for processing chinese texts.
+
 ## Usage
 ```
 from wordseg import WordSegment
@@ -29,14 +37,11 @@ Thanks Matrix67's [article](http://www.matrix67.com/blog/archives/5044)
 
 ## Install:
 Until now, I test it on my pc 
-+ version: py3.6, py2.7
++ version: py3.6
 + do : fork this git to your local dir
 + run this: python3 setup.py install
 
 Well done, do report me if any bad things happended
-
-## Explaination
-When I need deal with some chinese texts, I found this module(?). So I did an  adjustment to fit my needs.Since the module is not maintained by it's author, I, though a newbee in NLP, want to make it a more useful tool for processing chinese texts.
 
 ## plans:
 [x] add concurrent soupport
