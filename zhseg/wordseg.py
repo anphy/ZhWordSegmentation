@@ -128,13 +128,13 @@ class WordSegment(object):
 #        suffix_indexes = indexOfSortedSuffix(doc, self.max_word_len)
         word_cands = {}
         for line in doc:
-            sl = len(line)
-            for j in range(1,sl):
+            sl = len(line)+1
+            for j in range(sl):
                 left = line[j-1]
                 maxLen = self.max_word_len+j+1
                 for k in range(j+1, min(maxLen, sl)):
                     word = line[j:k]
-                    right = line[k]
+                    right = line[k:k+1]
                     if word not in word_cands:
                         word_cands[word] = WordInfo(word)
                     word_cands[word].update(left, right)
