@@ -8,26 +8,10 @@ Reference: http://www.matrix67.com/blog/archives/5044
 from __future__ import division, print_function
 import re
 import time
+import os
 from .probability import entropyOfList
 from .sequence import genSubparts, genSubstr
 
-
-
-
-def indexOfSortedSuffix(m_data, max_word_len):
-    """
-    Treat a suffix as an index where the suffix begins.
-    Then sort these indexes by the suffixes.
-    """
-    indexs = {}
-    for i in range(len(m_data)):
-        sl = len(m_data[i]) + 1
-        indexs[i] = []
-        for j in range(sl):
-            indexs[i].append(j, min(sl,max_word_len+j+1))
-#            for k in range(j+1, min(sl,max_word_len+j+1)):
-#                indexs[i].append((j,k))
-    return indexs
 
 
 class WordInfo(object):
@@ -92,21 +76,21 @@ class WordSegment(object):
     # if a word contains other shorter words, then return all possible results
     ALL = 2
 
-    def __init__(self, doc, max_word_len=5, min_freq=0.00005, min_entropy=2.0, min_aggregation=50):
+    def __init__(self, doc, max_word_len=5, min_freq=1, min_entropy=2.0, min_aggregation=1):
         super(WordSegment, self).__init__()
         t = time.time()
         self.max_word_len = max_word_len
-        self.min_freq = min_freq
         self.min_entropy = min_entropy
-        self.min_aggregation = min_aggregation
         self.word_infos = self.genWords(doc)
         # Result infomations, i.e., average data of all words
         word_count = len(self.word_infos)
         self.avg_len = sum(map(lambda w: len(w.text), self.word_infos))/word_count
         self.avg_freq = sum(map(lambda w: w.freq, self.word_infos))/word_count
+        self.min_freq = self.avg_freq * min_freq
 #        self.avg_left_entropy = sum(map(lambda w: w.left, self.word_infos))/word_count
 #        self.avg_right_entropy = sum(map(lambda w: w.right, self.word_infos))/word_count
         self.avg_aggregation = sum(map(lambda w: w.aggregation, self.word_infos))/word_count
+        self.min_aggregation = min_aggregation * self.avg_aggregation
         # Filter out the results satisfy all the requirements
         filter_func = lambda v: len(v.text) > 1 and v.aggregation > self.min_aggregation and\
                     v.freq > self.min_freq and v.entropy > self.min_entropy
@@ -127,6 +111,7 @@ class WordSegment(object):
         doc = self.wash_data(doc)
 #        suffix_indexes = indexOfSortedSuffix(doc, self.max_word_len)
         word_cands = {}
+    # compute frequency and neighbors
         for line in doc:
             sl = len(line)+1
             for j in range(sl):
@@ -138,14 +123,6 @@ class WordSegment(object):
                     if word not in word_cands:
                         word_cands[word] = WordInfo(word)
                     word_cands[word].update(left, right)
-        # compute frequency and neighbors
-#        for i, indexes in suffix_indexes.items():
-#            for index in indexes:
-#                word = doc[i][index[0]:index[1]]
-#                if word not in word_cands:
-#                    word_cands[word] = WordInfo(word)
-#                word_cands[word].update(doc[i][index[0] - 1:index[0]], doc[i][index[1]:index[1] + 1])
-        # compute probability and entropy
         length = len(''.join(doc))
         for k in word_cands:
             word_cands[k].compute(length)
@@ -181,7 +158,22 @@ class WordSegment(object):
                 if to_inc == 1: res.append(sentence[i])
                 i += to_inc
         return res
-
+    
+    def save_words(self, path=None):
+        '''
+        save the words segmented from your texts
+        '''
+        if not path:
+            if not os.path.exists('datas'):
+                os.mkdir('datas')
+            path = 'datas/word_list.txt'
+        with open(path,'w+') as f:
+            td = f.read().split(',')
+            for word in self.words:
+                if word not in td:
+                    td.append(word)
+            wd = ','.join(td)
+            f.write(wd)
 
 if __name__ == '__main__':
     doc = u'十四是十四四十是四十，，十四不是四十，，，，四十不是十四'
