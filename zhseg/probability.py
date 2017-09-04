@@ -4,7 +4,7 @@
 Algorithms about probability
 Author: 段凯强
 """
-
+from __future__ import division
 import math
 
 def entropyOfList(ls):
@@ -15,7 +15,7 @@ def entropyOfList(ls):
     elements = {}
     for e in ls:
         elements[e] = elements.get(e, 0) + 1
-    length = float(len(ls))
+    length = len(ls)
     return sum(map(lambda v: -v/length*math.log(v/length), elements.values()))
 
 

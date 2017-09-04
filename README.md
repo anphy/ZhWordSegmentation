@@ -40,5 +40,7 @@ When I need deal with some chinese texts, I found this module(?). So I did an  a
 
 ## plans:
 [x] add concurrent soupport
+
 [x] add read and save datasets, as you read more you get more words
+
 [x] add more algorithm

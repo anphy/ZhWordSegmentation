@@ -5,7 +5,7 @@ Chinese word segmentation algorithm without corpus
 Author: 段凯强
 Reference: http://www.matrix67.com/blog/archives/5044
 """
-
+from __future__ import division, print_function
 import re
 import time
 from .probability import entropyOfList
@@ -40,6 +40,7 @@ class WordInfo(object):
         self.left = []
         self.right = []
         self.aggregation = 0
+        self.entropy = 0
 
     def update(self, left, right):
         """
@@ -57,8 +58,9 @@ class WordInfo(object):
         @param length length of the document for training to get words
         """
         self.freq /= length
-        self.left = entropyOfList(self.left)
-        self.right = entropyOfList(self.right)
+#        self.left = entropyOfList(self.left)
+#        self.right = entropyOfList(self.right)
+        self.entropy = min(entropyOfList(self.left), entropyOfList(self.right))
 
     def computeAggregation(self, words_dict):
         """
@@ -98,7 +100,7 @@ class WordSegment(object):
         self.min_aggregation = min_aggregation
         self.word_infos = self.genWords(doc)
         # Result infomations, i.e., average data of all words
-        word_count = float(len(self.word_infos))
+        word_count = len(self.word_infos)
         self.avg_len = sum(map(lambda w: len(w.text), self.word_infos))/word_count
         self.avg_freq = sum(map(lambda w: w.freq, self.word_infos))/word_count
         self.avg_left_entropy = sum(map(lambda w: w.left, self.word_infos))/word_count
@@ -106,7 +108,7 @@ class WordSegment(object):
         self.avg_aggregation = sum(map(lambda w: w.aggregation, self.word_infos))/word_count
         # Filter out the results satisfy all the requirements
         filter_func = lambda v: len(v.text) > 1 and v.aggregation > self.min_aggregation and\
-                    v.freq > self.min_freq and v.left > self.min_entropy and v.right > self.min_entropy
+                    v.freq > self.min_freq and v.entropy > self.min_entropy
         self.word_with_freq = map(lambda w: (w.text, w.freq), filter(filter_func, self.word_infos))
         self.words = list(map(lambda w: w[0], self.word_with_freq))
         print('total_time:%s seconds'%round(time.time() - t, 3))

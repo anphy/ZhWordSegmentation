@@ -1,8 +1,8 @@
 from distutils.core import setup
 
 setup(
-    name='chseg',
-    version='0.012',
+    name='zhseg',
+    version='0.01',
     description='chinese word segment',
     author='Kaiqiang Duan',
     url='https://github.com/anphy/ChineseWordSegmentation',
@@ -21,6 +21,6 @@ setup(
         'Topic :: Text Processing :: Linguistic',
     ],
     keywords='NLP,Chinese, word segment',
-    packages=['chseg'],
-    package_dir={'chseg':'chseg'},
+    packages=['zhseg'],
+    package_dir={'zhseg':'zhseg'},
 )
