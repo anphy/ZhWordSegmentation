@@ -5,15 +5,23 @@ Chinese word segmentation algorithm without corpus
 ## Explaination
 When I need deal with some chinese texts, I found this module [ChineseWordSegmentation](https://github.com/Moonshile/ChineseWordSegmentation). 
 
-So I did an  adjustment to fit my needs. Since the it is not maintained by it's author, 
+So I did an  adjustment to fit my needs. 
 
-I, though a newbee in NLP, want to make it a more useful tool for processing chinese texts.
+Since the it is not maintained by it's author, I, though a newbee in NLP, want to make it a more useful tool for processing chinese texts.
+
+
+## Install:
+Until now, I test it on my pc 
++ version: py3.6
++ do : fork this git to your local dir
++ run this: python3 setup.py install
+
 
 ## Usage
-```
-from wordseg import WordSegment
+``` python
+from zhseg import *
 doc = u'十四是十四四十是四十，十四不是四十，四十不是十四'
-ws = WordSegment(doc, max_word_len=2, min_aggregation=1, min_entropy=0.5)
+ws = wordseg.WordSegment(doc, max_word_len=2, min_aggregation=1, min_entropy=0.5)
 ws.segSentence(doc)
 ```
 
@@ -35,11 +43,6 @@ Besides, both input and output of this function should be decoded as unicode.
 
 Thanks Matrix67's [article](http://www.matrix67.com/blog/archives/5044)
 
-## Install:
-Until now, I test it on my pc 
-+ version: py3.6
-+ do : fork this git to your local dir
-+ run this: python3 setup.py install
 
 Well done, do report me if any bad things happended
 

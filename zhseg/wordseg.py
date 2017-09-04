@@ -24,8 +24,9 @@ def indexOfSortedSuffix(m_data, max_word_len):
         sl = len(m_data[i]) + 1
         indexs[i] = []
         for j in range(sl):
-            for k in range(j+1, min(sl,max_word_len+j+1)):
-                indexs[i].append((j,k))
+            indexs[i].append(j, min(sl,max_word_len+j+1))
+#            for k in range(j+1, min(sl,max_word_len+j+1)):
+#                indexs[i].append((j,k))
     return indexs
 
 
@@ -103,8 +104,8 @@ class WordSegment(object):
         word_count = len(self.word_infos)
         self.avg_len = sum(map(lambda w: len(w.text), self.word_infos))/word_count
         self.avg_freq = sum(map(lambda w: w.freq, self.word_infos))/word_count
-        self.avg_left_entropy = sum(map(lambda w: w.left, self.word_infos))/word_count
-        self.avg_right_entropy = sum(map(lambda w: w.right, self.word_infos))/word_count
+#        self.avg_left_entropy = sum(map(lambda w: w.left, self.word_infos))/word_count
+#        self.avg_right_entropy = sum(map(lambda w: w.right, self.word_infos))/word_count
         self.avg_aggregation = sum(map(lambda w: w.aggregation, self.word_infos))/word_count
         # Filter out the results satisfy all the requirements
         filter_func = lambda v: len(v.text) > 1 and v.aggregation > self.min_aggregation and\
@@ -124,15 +125,26 @@ class WordSegment(object):
         @param doc the document used for words generation
         """
         doc = self.wash_data(doc)
-        suffix_indexes = indexOfSortedSuffix(doc, self.max_word_len)
+#        suffix_indexes = indexOfSortedSuffix(doc, self.max_word_len)
         word_cands = {}
+        for line in doc:
+            sl = len(line)
+            for j in range(1,sl):
+                left = line[j-1]
+                maxLen = self.max_word_len+j+1
+                for k in range(j+1, min(maxLen, sl)):
+                    word = line[j:k]
+                    right = line[k]
+                    if word not in word_cands:
+                        word_cands[word] = WordInfo(word)
+                    word_cands[word].update(left, right)
         # compute frequency and neighbors
-        for i, indexes in suffix_indexes.items():
-            for index in indexes:
-                word = doc[i][index[0]:index[1]]
-                if word not in word_cands:
-                    word_cands[word] = WordInfo(word)
-                word_cands[word].update(doc[i][index[0] - 1:index[0]], doc[i][index[1]:index[1] + 1])
+#        for i, indexes in suffix_indexes.items():
+#            for index in indexes:
+#                word = doc[i][index[0]:index[1]]
+#                if word not in word_cands:
+#                    word_cands[word] = WordInfo(word)
+#                word_cands[word].update(doc[i][index[0] - 1:index[0]], doc[i][index[1]:index[1] + 1])
         # compute probability and entropy
         length = len(''.join(doc))
         for k in word_cands:
